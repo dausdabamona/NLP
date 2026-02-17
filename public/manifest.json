@@ -1,0 +1,20 @@
+{
+  "name": "NLP Modeling Trainer",
+  "short_name": "NLP Trainer",
+  "description": "Aplikasi pelatihan teknik modeling NLP selama 6 minggu",
+  "start_url": "/NLP/",
+  "scope": "/NLP/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#1B4F72",
+  "background_color": "#0F172A",
+  "lang": "id",
+  "icons": [
+    {
+      "src": "/NLP/brain-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
