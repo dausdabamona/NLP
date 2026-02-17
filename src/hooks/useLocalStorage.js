@@ -14,11 +14,16 @@ export function useLocalStorage(key, initialValue) {
     setStoredValue((prev) => {
       const valueToStore = value instanceof Function ? value(prev) : value
       window.localStorage.setItem(key, JSON.stringify(valueToStore))
+      // Dispatch custom event to sync other hooks using the same key in this tab
+      window.dispatchEvent(new CustomEvent('local-storage-update', {
+        detail: { key, value: valueToStore },
+      }))
       return valueToStore
     })
   }, [key])
 
   useEffect(() => {
+    // Sync across different tabs
     const handleStorage = (e) => {
       if (e.key === key) {
         try {
@@ -28,8 +33,18 @@ export function useLocalStorage(key, initialValue) {
         }
       }
     }
+    // Sync across components in the same tab
+    const handleLocalUpdate = (e) => {
+      if (e.detail.key === key) {
+        setStoredValue(e.detail.value)
+      }
+    }
     window.addEventListener('storage', handleStorage)
-    return () => window.removeEventListener('storage', handleStorage)
+    window.addEventListener('local-storage-update', handleLocalUpdate)
+    return () => {
+      window.removeEventListener('storage', handleStorage)
+      window.removeEventListener('local-storage-update', handleLocalUpdate)
+    }
   }, [key, initialValue])
 
   return [storedValue, setValue]
